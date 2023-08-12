@@ -6,6 +6,7 @@ const compression = require('compression')
 const cors = require('cors')
 const mongoose =require('mongoose')
 const app = express()
+require('dotenv').config()
 import router from "./router";
 app.use(cors({
     credentials:true
@@ -22,7 +23,7 @@ server.listen(3000,()=>{
 
 
 mongoose.Promise = Promise
-mongoose.connect('mongodb+srv://lucaszebre1:zhoHBh2zl9ESCqI9@cluster0.kdkxwkt.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGODB)
 mongoose.connection.on('error', (error: Error) => console.log(error));
 
 
