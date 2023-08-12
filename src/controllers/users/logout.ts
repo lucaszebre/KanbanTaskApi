@@ -1,12 +1,18 @@
 import express from 'express';
-export const Logout = async (req: express.Request, res: express.Response) => {
-	try {
-		req.user.tokens = req.user.tokens.filter((token) => {
-			return token.token !== req.token;
-		});
-		await req.user.save();
-		res.status(200).json({ status: 'success' });
-	} catch (error) {
-		res.status(500).json({ status: 'fail', error });
-	}
+
+export const logout = async (req: express.Request, res: express.Response) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.sendStatus(401); // Unauthorized
+    }
+
+    // Rest of your logout logic
+
+    return res.sendStatus(200); // OK
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500); // Internal Server Error
+  }
 };
