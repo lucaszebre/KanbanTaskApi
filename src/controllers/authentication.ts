@@ -27,7 +27,7 @@ export const login = async (req: express.Request, res: express.Response) => {
 
     await user.save();
 
-    res.cookie('ANTONIO-AUTH', user.authentication.sessionToken, { domain: 'localhost', path: '/' });
+    res.cookie('AUTH', user.authentication.sessionToken, { domain: 'localhost', path: '/' });
 
     return res.status(200).json(user).end();
   } catch (error) {
@@ -38,9 +38,9 @@ export const login = async (req: express.Request, res: express.Response) => {
 
 export const register = async (req: express.Request, res: express.Response) => {
     try {
-      const { email, password, username } = req.body;
+      const { email, password, username,user_id } = req.body;
   
-      if (!email || !password || !username) {
+      if (!email || !password || !username || !user_id) {
         return res.sendStatus(400);
       }
   
@@ -54,6 +54,7 @@ export const register = async (req: express.Request, res: express.Response) => {
       const user = await createUser({
         email,
         username,
+        user_id,
         authentication: {
           salt,
           password: authentication(salt, password),
