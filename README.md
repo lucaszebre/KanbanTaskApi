@@ -4,9 +4,7 @@ Kanban Task manager API built using **NODE JS** and **MongoDB**. It follows a **
 
 ## Features
 
-- Sending Emails
 - Authentication and Security
-- Avatar upload
 
 ## API Endpoints
 
