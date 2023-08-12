@@ -12,19 +12,21 @@ Kanban Task manager API built using **NODE JS** and **MongoDB**. It follows a **
 
 | Methods | Endpoints                          | Access  | Description                              |
 | ------- | ---------------------------------- | ------- | ---------------------------------------- |
-| POST    | /users                             | Public  | Sign up                                  |
-| POST    | /users/login                       | Public  | Login                                    |
-| GET     | /users/boards                         | Private | User's Profile                           |
-| PATCH   | /users/me                          | Private | Update Profile                           |
-| POST    | /users/me/avatar                   | Private | Upload Profile Picture                   |
-| GET     | /users/userID/avataar              | Private | View Profile Picture                     |
-| DELETE  | /users/me/avatar                   | Private | Delete Profile Picture                   |
-| DELETE  | /users/me                          | Private | Delete Account                           |
-| POST    | /users/tasks                       | Private | Create a Task                            |
-| GET     | /users/tasks/taskID                | Private | View a Task                              |
-| GET     | /users/tasks                       | Private | View all Tasks                           |
-| PATCH   | /users/tasks/taskID                | Private | Update a Task                            |
-| DELETE  | /users/tasks/taskID                | Private | Delete a Task                            |
+| POST    | /auth/register               | Public  | Register                                 |
+| POST    | /auth/login                       | Public  | Login                                    |
+| GET     | /users/boards                         | Private | User's Boards                         |
+| PUT   | /users/boards                          | Private | Update Boards                           |
+| POST    | /users/boards                   | Private |  Create Boards                   |
+| DELETE    | /users/boards              | Private | Delete all the boards                      |
+| GET | /users/boards/[boardsId]                   | Private | get the board 
+| PUT | /users/boards/[boardsId]                   | Private | update the board 
+| DELETE | /users/boards/[boardsId]                   | Private | delete the board 
+| DELETE  | /users/boards/[boardId]/task/[taskId]                          | Private | Delete the task                            |
+| POST    |/users/boards/[boardId]/task/[taskId]                 | Private | Create a Task                            |
+| GET     | /users/boards/[boardId]/task/[taskId]               | Private | View a Task                              |
+| GET     | /users/boards/[boardId]/tasks                       | Private | View all Tasks                           |
+| PUT   | /users/boards/[boardId]/task/[taskId]               | Private | Update a Task                            |
+                          |
 | POST    | /users/logout                      | Private | Logout an account                        |
 | POST    | /users/logoutall                   | Private | Logout all accounts                      |
 
