@@ -1,10 +1,10 @@
-import express from 'express'
-import http from "http"
-import bodyParser from "bodyParser"
-import cookieParser from "cookieParser"
-import compression from "compression"
-import cors from "cors"
-
+const express = require('express');
+const http = require('http')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const compression = require('compression')
+const cors = require('cors')
+const mongoose =require('mongoose')
 const app = express()
 
 app.use(cors({
@@ -19,3 +19,8 @@ const server = http.createServer(app)
 server.listen(3000,()=>{
     console.log('Server running on localhost/3000')
 })
+
+
+mongoose.Promise = Promise
+mongoose.connect('mongodb+srv://lucaszebre1:zhoHBh2zl9ESCqI9@cluster0.kdkxwkt.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connection.on('error',(error)=>{console.error(error)})
