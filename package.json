@@ -1,0 +1,14 @@
+{
+  "name": "kanbantaskapi",
+  "version": "1.0.0",
+  "description": "KanbanTask api made by lucas zebre",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lucaszebre",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
