@@ -5,8 +5,10 @@ const cookieParser = require('cookie-parser')
 const compression = require('compression')
 const cors = require('cors')
 const mongoose =require('mongoose')
+const jwt = require("jsonwebtoken");
 const app = express()
-require('dotenv').config()
+import * as dotenv from 'dotenv';
+
 import router from "./router";
 app.use(cors({
     credentials:true
@@ -20,10 +22,12 @@ const server = http.createServer(app)
 server.listen(3000,()=>{
     console.log('Server running on localhost/3000')
 })
+dotenv.config();
 
+const { MONGODB } = process.env;
 
 mongoose.Promise = Promise
-mongoose.connect(process.env.MONGODB)
+mongoose.connect(MONGODB)
 mongoose.connection.on('error', (error: Error) => console.log(error));
 
 
