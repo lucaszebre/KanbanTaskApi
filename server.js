@@ -1,12 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const  dotenv = require('dotenv');
-
+const verifyToken = require('../middlewares/authJwt.js')
 const app = express();
 
 var corsOptions = {
   origin: "http://localhost:3000"
 };
+const router = express.Router();
 
 app.use(cors(corsOptions));
 
@@ -42,6 +43,7 @@ app.get("/", (req, res) => {
 
 // routes
 require("./app/routes/auth.routes")(app);
+router.use(verifyToken)
 require("./app/routes/board.routes")(app);
 
 // set port, listen for requests

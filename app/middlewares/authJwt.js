@@ -18,8 +18,16 @@ verifyToken = (req, res, next) => {
                   message: "Unauthorized!",
                 });
               }
-              req.userId = decoded.id;
-              next();
+              User.findById(decoded.id, (err, user) => {
+                if (err) {
+                  return res.status(500).json({ message: 'Error retrieving user' });
+                }
+                if (!user) {
+                  return res.status(404).json({ message: 'User not found' });
+                }
+                req.userId = decoded.id;
+                next();
+              });
             });
 };
 

@@ -38,8 +38,8 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
 
 
 
-const verifySignUp = {
+const verifyRegister = {
   checkDuplicateUsernameOrEmail,
 };
 
-module.exports = verifySignUp;
+module.exports = verifyRegister;
