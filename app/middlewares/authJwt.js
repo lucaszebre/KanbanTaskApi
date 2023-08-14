@@ -4,6 +4,8 @@ const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
+
+
   let token = req.headers["x-access-token"];
 
   if (!token) {
@@ -31,9 +33,28 @@ verifyToken = (req, res, next) => {
             });
 };
 
+authenticateJWT = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      jwt.verify(token,config.secret, (err, user) => {
+          if (err) {
+              return res.sendStatus(403);
+          }
+
+          req.user = user;
+          next();
+      });
+  } else {
+    console.log('2en error')
+      res.sendStatus(401);
+  }
+};
 
 
 const authJwt = {
   verifyToken,
+  authenticateJWT
 };
 module.exports = authJwt;

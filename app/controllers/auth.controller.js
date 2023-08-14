@@ -53,13 +53,14 @@ exports.login = (req, res) => {
                               config.secret,
                               {
                                 algorithm: 'HS256',
-                                allowInsecureKeySizes: true,
-                                expiresIn: 86400, // 24 hours
+                                expiresIn: '24h', // 24 hours
                               });
 
 
       
-      res.status(200).send({
+      res.status(200)
+      .header('Authorization', 'Bearer ' + token)
+      .send({
         id: user._id,
         username: user.username,
         email: user.email,
