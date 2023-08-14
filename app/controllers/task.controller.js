@@ -1,23 +1,22 @@
 const db = require("../models");
 const Board = db.board;
-const Task= db.Task
-
+const Column = db.column
 // Get tasks for a specific column within a board
-exports.getColumnTasks = async (req, res) => {
+exports.getColumnTask = async (req, res) => {
     try {
-      const { boardId, columnName } = req.params; // Extract boardId and columnName from request parameters
+      const { boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
       const board = await Board.findById(boardId); // Retrieve the board by its ID
-  
       if (!board) {
         return res.status(404).json({ message: 'Board not found' });
       }
-  
-      const column = board.columns.find(col => col.name === columnName); // Find the specified column
+      const column = board.columns.find((col) => col._id.toString() === columnId);
+
+ // Find the specified column
       if (!column) {
         return res.status(404).json({ message: 'Column not found' });
       }
   
-      res.json(column.tasks);
+      res.json(column);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
     }
@@ -26,23 +25,24 @@ exports.getColumnTasks = async (req, res) => {
   // Create a new task within a column
   exports.createTask = async (req, res) => {
     try {
-      const { boardId, columnName } = req.params; // Extract boardId and columnName from request parameters
+      const { boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
       const board = await Board.findById(boardId); // Retrieve the board by its ID
-  
+      console.log('board',board)
       if (!board) {
         return res.status(404).json({ message: 'Board not found' });
       }
   
-      const column = board.columns.find(col => col.name === columnName); // Find the specified column
+      const column = board.columns.find((col) => col._id.toString() === columnId);
+      console.log('column',column)
       if (!column) {
         return res.status(404).json({ message: 'Column not found' });
       }
   
       const newTask = req.body; // Assuming the request body contains the new task data
+      console.log('newtask',newTask)
       column.tasks.push(newTask); // Add the new task to the column
-      await board.save(); // Save the updated board
-  
-      res.status(201).json(newTask);
+      const Newcolumn = awaitColumn.findByIdAndUpdate(column._id,column)
+      res.status(201).json(Newcolumn);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
     }
@@ -51,14 +51,14 @@ exports.getColumnTasks = async (req, res) => {
   // Update an existing task within a column
   exports.updateTask = async (req, res) => {
     try {
-      const { boardId, columnName, taskId } = req.params; // Extract boardId, columnName, and taskId from request parameters
+      const { boardId, columnId, taskId } = req.params; // Extract boardId, columnName, and taskId from request parameters
       const board = await Board.findById(boardId); // Retrieve the board by its ID
   
       if (!board) {
         return res.status(404).json({ message: 'Board not found' });
       }
   
-      const column = board.columns.find(col => col.name === columnName); // Find the specified column
+      const column = board.columns.findById(columnId); // Find the specified column
       if (!column) {
         return res.status(404).json({ message: 'Column not found' });
       }
@@ -70,8 +70,6 @@ exports.getColumnTasks = async (req, res) => {
   
       const updatedTaskData = req.body; // Assuming the request body contains the updated task data
       task.set(updatedTaskData); // Update the task properties
-      await board.save(); // Save the updated board
-  
       res.json(task);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
@@ -81,14 +79,14 @@ exports.getColumnTasks = async (req, res) => {
   // Delete a task within a column
   exports.deleteTask = async (req, res) => {
     try {
-      const { boardId, columnName, taskId } = req.params; // Extract boardId, columnName, and taskId from request parameters
+      const { boardId, columnId, taskId } = req.params; // Extract boardId, columnName, and taskId from request parameters
       const board = await Board.findById(boardId); // Retrieve the board by its ID
   
       if (!board) {
         return res.status(404).json({ message: 'Board not found' });
       }
   
-      const column = board.columns.find(col => col.name === columnName); // Find the specified column
+      const column = board.columns.findById(columnId); // Find the specified column
       if (!column) {
         return res.status(404).json({ message: 'Column not found' });
       }
@@ -107,11 +105,5 @@ exports.getColumnTasks = async (req, res) => {
     }
   };
 
-  
-  module.exports = {
-    getColumnTasks,
-    createTask,
-    updateTask,
-    deleteTask,
-  };
+
   

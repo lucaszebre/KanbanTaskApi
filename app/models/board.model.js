@@ -16,7 +16,7 @@ const subtaskSchema = new mongoose.Schema({
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,
@@ -36,19 +36,23 @@ const boardSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  columns: [
-    {
-      name: {
-        type: String,
-        required: true
-      },
-      tasks: [taskSchema]
-    }
-  ]
+  columns: [{
+  
+    name: {
+      type: String,
+      required: true
+    },
+    tasks: [taskSchema]
+  
+}]
 });
+
+const AllBoardsSchema = new mongoose.Schema({
+  Boards:[boardSchema]
+})
 
 // Create the Board model
 const Board = mongoose.model('Board', boardSchema);
-
+const AllBoard = mongoose.model('AllBoard',AllBoardsSchema)
 module.exports = Board;
 

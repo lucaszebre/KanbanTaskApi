@@ -19,8 +19,8 @@ exports.updateBoards = async (req, res) => {
         // Update logic here, e.g., req.body contains updated board data
         // You can use findByIdAndUpdate or findOneAndUpdate
         const newBoardData = req.body; // Assuming the request body contains the new board data
-        
-        const updatedBoards = await Board.findByIdAndUpdate(newBoardData.userId , { new: true });
+        const { boardId} = req.params;
+        const updatedBoards = await Board.findByIdAndUpdate(boardId, newBoardData);
         res.json(updatedBoards);
         } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
@@ -39,3 +39,13 @@ exports.updateBoards = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
         }
     };
+
+    exports.deleteBoard=async (req,res) => {
+      try{
+        const { boardId } = req.params;
+        const deleteBoard = await Board.findByIdAndDelete(boardId)
+        res.status(201).json(deleteBoard);
+      }catch(error){
+        res.status(500).json({message:'Internal server error'})
+      }
+    }
