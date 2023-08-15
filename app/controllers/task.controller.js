@@ -1,6 +1,5 @@
 const db = require("../models");
 const Board = db.board;
-const Column = db.column
 // Get tasks for a specific column within a board
 exports.getColumnTask = async (req, res) => {
     try {
