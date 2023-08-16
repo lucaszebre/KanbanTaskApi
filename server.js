@@ -4,7 +4,7 @@ const  dotenv = require('dotenv');
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:3000"
+  origin: "https://kanbantask.onrender.com/"
 };
 
 app.use(cors(corsOptions));
