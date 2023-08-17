@@ -21,7 +21,7 @@ Kanban Task manager API built using **NODE JS** and **MongoDB**. It follows a **
 | POST | /user/[userId]/boards/[boardsId]/columns/[columnId]                  | Private | create one task
 | DELETE  | /user/[userId]/boards/[boardsId]/columns/[columnId]/tasks/[taskId]                          | Private | Delete one task                            
 
-| POST    | /auth/logout                      | Private | Logout an account                        |
+| POST    | /auth/logout                      | Private | Logout an account                        
 | POST    | /auth/logoutall                   | Private | Logout all accounts                      |
 
 ## Hosted Domain Link
