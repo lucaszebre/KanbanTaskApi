@@ -25,7 +25,7 @@ Kanban Task manager API built using **NODE JS** and **MongoDB**. It follows a **
 
 ## Hosted Domain Link
 
-[Kanban Task Manager API](https://kater-task-manager-api.herokuapp.com/)
+[Kanban Task Manager API](https://kanbantask.onrender.com)
 
 ## Postman Collection Link
 
