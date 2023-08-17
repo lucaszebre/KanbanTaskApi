@@ -5,7 +5,7 @@ const  dotenv = require('dotenv');
 const app = express();
 const mongoose = require('mongoose')
 var corsOptions = {
-  origin: "http://localhost:4000"
+  origin: "https://kanbantask.onrender.com"
 };
 const authJwt = require("./app/middlewares/authJwt")
 
