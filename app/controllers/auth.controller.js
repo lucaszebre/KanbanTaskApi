@@ -4,6 +4,7 @@ const User = db.user;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const maxAge = 3 * 24 * 60 * 60;
 
 exports.register = (req, res) => {
 
@@ -57,16 +58,35 @@ exports.login = (req, res) => {
           expiresIn: '1000000000000000000', // 24 hours
         }
       );
+      res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
 
-      
       res.status(200)
       .header('Authorization', 'Bearer ' + token)
       .send({
         id: user._id,
         username: user.username,
         email: user.email,
-        accessToken: token
       });
     });
 };
 
+exports.logout = (req, res) => {
+  // Remove the JWT token from the request headers
+  if (req.headers.authorization) {
+    delete req.headers.authorization;
+  }
+
+  // Clear the user session
+  req.session.destroy((err) => {
+    if (err) {
+      res.status(500).json({ message: "Error while logging out" });
+    } else {
+      res.json({ message: "Successfully logged out!" });
+    }
+  });
+};
+
+exports.logout = (req, res) => {
+  res.cookie('jwt', '', { maxAge: 1 });
+  res.redirect('/');
+}

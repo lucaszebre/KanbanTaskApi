@@ -3,61 +3,47 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 
-verifyToken = (req, res, next) => {
-  
+const requireAuth = (req, res, next) => {
+  const token = req.cookies.jwt;
 
-  let token = req.headers['authorization'].split(' ')[1];
-
-  console.log(token)
-  console.log(config.secret)
-
-  if (!token) {
-    return res.status(403).send({ message: "No token provided!" });
-  }
-  jwt.verify(token,
-    "lucaszebre-secret-key",
-            (err, decoded) => {
-              if (err) {
-                console.error(err)
-                return res.status(401).send({
-                  message: "Unauthorized!",
-                });
-              }
-              User.findById(decoded.id, (err, user) => {
-                if (err) {
-                  return res.status(500).json({ message: 'Error retrieving user' });
-                }
-                if (!user) {
-                  return res.status(404).json({ message: 'User not found' });
-                }
-                req.userId = decoded.id;
-                next();
-              });
-            });
-};
-
-authenticateJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (authHeader) {
-      const token = authHeader.split(' ')[1];
-      jwt.verify(token,config.secret, (err, user) => {
-          if (err) {
-              return res.sendStatus(403);
-          }
-
-          req.user = user;
-          next();
-      });
+  // check json web token exists & is verified
+  if (token) {
+    jwt.verify(token, config.secret, (err, decodedToken) => {
+      if (err) {
+        console.log(err.message);
+        res.redirect('/auth/login');
+      } else {
+        console.log(decodedToken);
+        next();
+      }
+    });
   } else {
-    console.log('2en error')
-      res.sendStatus(401);
+    res.redirect('/auth/login');
   }
 };
 
+// check current user
+const checkUser = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, config.secret, async (err, decodedToken) => {
+      if (err) {
+        res.locals.user = null;
+        next();
+      } else {
+        let user = await User.findById(decodedToken.id);
+        res.locals.user = user;
+        next();
+      }
+    });
+  } else {
+    res.locals.user = null;
+    next();
+  }
+};
 
 const authJwt = {
-  verifyToken,
-  authenticateJWT
+  requireAuth,
+  checkUser
 };
 module.exports = authJwt;

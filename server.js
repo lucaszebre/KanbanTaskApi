@@ -1,11 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require('cookie-parser')
 const  dotenv = require('dotenv');
 const app = express();
 const mongoose = require('mongoose')
 var corsOptions = {
   origin: "http://localhost:4000"
 };
+const authJwt = require("./app/middlewares/authJwt")
 
 app.use(cors(corsOptions));
 
@@ -15,6 +17,7 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
 const db = require("./app/models");
 const Role = db.role;
 dotenv.config();
@@ -33,6 +36,9 @@ db.mongoose
     console.error("Connection error", err);
     process.exit();
   });
+
+  // app.get('*', authJwt.requireAuth);
+
 
 // simple route
 app.get("/", (req, res) => {

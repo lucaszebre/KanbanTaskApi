@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const {isEmail} = require('validator')
 
 
 // Define subtask schema
@@ -52,9 +52,18 @@ const boardSchema = new mongoose.Schema({
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
-    username: String,
-    email: String,
-    password: String,
+    username: {
+    type:String,
+    required:[true,"please enter a username"],
+    unique:true},
+    email: {type:String,
+    required:[true,'please enter a  email'],
+    unique:true,
+    validate:[isEmail,'Please enter a valid email']
+  },
+    password: {type:String,
+    required:[true,'please enter a password'],
+    minilength:[6,'Minimun password length of 6 character']},
     Boards:[boardSchema]
   })
 );
