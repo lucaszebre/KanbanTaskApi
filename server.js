@@ -4,12 +4,12 @@ const cookieParser = require('cookie-parser')
 const  dotenv = require('dotenv');
 const app = express();
 const mongoose = require('mongoose')
-var corsOptions = {
-  origin: "https://kanbantask.onrender.com"
-};
+// var corsOptions = {
+//   origin: "https://kanbantask.onrender.com"
+// };
 const authJwt = require("./app/middlewares/authJwt")
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
