@@ -2,8 +2,11 @@ const controller = require("../controllers/board.controller");
 const authJwt = require("../middlewares/authJwt")
 module.exports = function(app) {
 
-    app.get('/boards',authJwt.authenticateJWT,controller.getUserBoards)
-    app.put('/boards/:boardId',authJwt.authenticateJWT,controller.updateBoards)
-    app.post('/boards',authJwt.authenticateJWT,controller.createBoard)
-    app.delete('/boards/:boardId',authJwt.authenticateJWT,controller.deleteBoard)
+    app.get('/user/:userId',controller.getUserBoards);
+    app.get('/user/:userId/boards/:boardId',controller.getOneBoard);
+    app.put('/boards/:boardId',controller.updateBoards);
+    app.post('/user/:userId',controller.createBoard);
+    app.delete('/user/:userId/boards/:boardId',controller.deleteBoard);
+  
+      
 }

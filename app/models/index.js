@@ -6,8 +6,8 @@ const db = {};
 db.mongoose = mongoose;
 
 db.user = require("./user.model");
-db.board= require("./board.model")
-db.column = require('./board.model')
-db.task=require('./board.model')
+db.board= require("./user.model")
+db.column = require('./user.model')
+db.task=require('./user.model')
 
 module.exports = db;

@@ -1,14 +1,19 @@
 const db = require("../models");
-const Board = db.board;
+const User = db.user;
 // Get tasks for a specific column within a board
 exports.getColumnTask = async (req, res) => {
     try {
-      const { boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
-      const board = await Board.findById(boardId); // Retrieve the board by its ID
-      if (!board) {
-        return res.status(404).json({ message: 'Board not found' });
+      const { userId,boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
+      const user = await User.findById(userId); // Retrieve the board by its ID
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
       }
-      const column = board.columns.find((col) => col._id.toString() === columnId);
+
+      const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+
+      const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
+
+      const column = user.Boards[boardIndex].columns[columnIndex];
 
  // Find the specified column
       if (!column) {
@@ -24,23 +29,25 @@ exports.getColumnTask = async (req, res) => {
   // Create a new task within a column
   exports.createTask = async (req, res) => {
     try {
-      const { boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
-      const board = await Board.findById(boardId); // Retrieve the board by its ID
-      console.log('board',board)
-      if (!board) {
-        return res.status(404).json({ message: 'Board not found' });
+      const newTask = req.body; // Assuming the request body contains the new task data
+
+      const { userId,boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
+      const user = await User.findById(userId); // Retrieve the board by its ID
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
       }
+      const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+
+      const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
+
+      const column = user.Boards[boardIndex].columns[columnIndex].tasks.push(newTask);
+      const Newcolumn = user.Boards[boardIndex].columns[columnIndex].tasks;
+      console.log('column',column);
   
-      const column = board.columns.find((col) => col._id.toString() === columnId);
-      console.log('column',column)
       if (!column) {
         return res.status(404).json({ message: 'Column not found' });
       }
-  
-      const newTask = req.body; // Assuming the request body contains the new task data
-      console.log('newtask',newTask)
-      column.tasks.push(newTask); // Add the new task to the column
-      const Newcolumn = awaitColumn.findByIdAndUpdate(column._id,column)
+      user.save();
       res.status(201).json(Newcolumn);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
@@ -50,26 +57,32 @@ exports.getColumnTask = async (req, res) => {
   // Update an existing task within a column
   exports.updateTask = async (req, res) => {
     try {
-      const { boardId, columnId, taskId } = req.params; // Extract boardId, columnName, and taskId from request parameters
-      const board = await Board.findById(boardId); // Retrieve the board by its ID
+      const { userId,boardId, columnId, taskId } = req.params; // Extract boardId, columnName, and taskId from request parameters
+      const newTask = req.body; // Assuming the request body contains the new task data
   
-      if (!board) {
+      const user = await User.findById(userId); // Retrieve the board by its ID
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+      if (boardIndex === -1) {
         return res.status(404).json({ message: 'Board not found' });
       }
-  
-      const column = board.columns.findById(columnId); // Find the specified column
-      if (!column) {
+      const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
+      if (columnIndex=== -1) {
         return res.status(404).json({ message: 'Column not found' });
       }
-  
-      const task = column.tasks.id(taskId); // Find the task within the column by its ID
-      if (!task) {
+      const taskIndex = user.Boards[boardIndex].columns[columnIndex].tasks.findIndex(column => column._id.toString() === taskId);
+      if (taskIndex === -1) {
         return res.status(404).json({ message: 'Task not found' });
       }
+      const task = user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex];
+
+      console.log('task',task);
   
-      const updatedTaskData = req.body; // Assuming the request body contains the updated task data
-      task.set(updatedTaskData); // Update the task properties
-      res.json(task);
+      
+      user.save();
+      res.status(201).json(task);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });
     }

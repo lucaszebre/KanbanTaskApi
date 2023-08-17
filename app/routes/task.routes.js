@@ -4,9 +4,9 @@ const authJwt = require("../middlewares/authJwt");
 module.exports = function(app) {
 
 // Define routes for tasks
-app.get('/boards/:boardId/columns/:columnId',authJwt.authenticateJWT, controller.getColumnTask);
-app.post('/boards/:boardId/columns/:columnId',authJwt.authenticateJWT, controller.createTask);
-app.put('/boards/:boardId/columns/:columnId/tasks/:taskId',authJwt.authenticateJWT, controller.updateTask);
+app.get('/user/:userId/boards/:boardId/columns/:columnId', controller.getColumnTask);
+app.post('/user/:userId/boards/:boardId/columns/:columnId', controller.createTask);
+app.put('/user/:userId/boards/:boardId/columns/:columnId/tasks/:taskId', controller.updateTask);
 app.delete('/boards/:boardId/columns/:columnId/tasks/:taskId',authJwt.authenticateJWT, controller.deleteTask);
 
 }

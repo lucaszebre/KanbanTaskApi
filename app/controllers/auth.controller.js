@@ -49,13 +49,14 @@ exports.login = (req, res) => {
         });
       }
 
-      const token = jwt.sign({ id: user.id },
-                              config.secret,
-                              {
-                                algorithm: 'HS256',
-                                expiresIn: '24h', // 24 hours
-                              });
-
+      const token = jwt.sign(
+        { id: user.id },
+        config.secret,
+        {
+          algorithm: 'HS256',
+          expiresIn: '1000000000000000000', // 24 hours
+        }
+      );
 
       
       res.status(200)

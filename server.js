@@ -2,9 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const  dotenv = require('dotenv');
 const app = express();
-
+const mongoose = require('mongoose')
 var corsOptions = {
-  origin: "https://kanbantask.onrender.com/"
+  origin: "http://localhost:4000"
 };
 
 app.use(cors(corsOptions));
@@ -19,7 +19,7 @@ const db = require("./app/models");
 const Role = db.role;
 dotenv.config();
 const { MONGODB } = process.env;
-
+mongoose.set('strictQuery', true);
 db.mongoose
   .connect(MONGODB, {
     useNewUrlParser: true,

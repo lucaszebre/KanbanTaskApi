@@ -4,18 +4,21 @@ const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
+  
 
+  let token = req.headers['authorization'].split(' ')[1];
 
-  let token = req.headers["x-access-token"];
+  console.log(token)
+  console.log(config.secret)
 
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
-
   jwt.verify(token,
-            config.secret,
+    "lucaszebre-secret-key",
             (err, decoded) => {
               if (err) {
+                console.error(err)
                 return res.status(401).send({
                   message: "Unauthorized!",
                 });
