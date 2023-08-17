@@ -34,9 +34,14 @@ exports.updateBoards = async (req, res) => {
         // Update logic here, e.g., req.body contains updated board data
         // You can use findByIdAndUpdate or findOneAndUpdate
         const newBoardData = req.body; // Assuming the request body contains the new board data
-        const { boardId} = req.params;
-        const updatedBoards = await Board.findByIdAndUpdate(boardId, newBoardData);
-        res.status(200).json(updatedBoards);
+        const { boardId,userId} = req.params;
+        const userBoards = await User.findById(userId ); // Adjust the query to match your schema
+        const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
+
+         userBoards.Boards[boardIndex] = newBoardData;
+
+        await userBoards.save()
+        res.status(200).json(userBoards);
         } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
         }
