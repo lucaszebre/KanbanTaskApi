@@ -7,6 +7,6 @@ module.exports = function(app) {
 app.get('/user/:userId/boards/:boardId/columns/:columnId', controller.getColumnTask);
 app.post('/user/:userId/boards/:boardId/columns/:columnId', controller.createTask);
 app.put('/user/:userId/boards/:boardId/columns/:columnId/tasks/:taskId', controller.updateTask);
-app.delete('/boards/:boardId/columns/:columnId/tasks/:taskId',authJwt.authenticateJWT, controller.deleteTask);
+app.delete('/user/:userId/boards/:boardId/columns/:columnId/tasks/:taskId', controller.deleteTask);
 
 }
