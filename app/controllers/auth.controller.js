@@ -19,8 +19,9 @@ exports.register = (req, res) => {
       res.status(500).send({ message: err });
       return;
     }
-          res.send({ message: "User was registered successfully!" });
+          res.send({ message: "User was registered successfully!", user });
         });
+  
       };
 
 
@@ -70,21 +71,7 @@ exports.login = (req, res) => {
     });
 };
 
-exports.logout = (req, res) => {
-  // Remove the JWT token from the request headers
-  if (req.headers.authorization) {
-    delete req.headers.authorization;
-  }
 
-  // Clear the user session
-  req.session.destroy((err) => {
-    if (err) {
-      res.status(500).json({ message: "Error while logging out" });
-    } else {
-      res.json({ message: "Successfully logged out!" });
-    }
-  });
-};
 
 exports.logout = (req, res) => {
   res.cookie('jwt', '', { maxAge: 1 });
