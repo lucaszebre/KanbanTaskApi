@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const authJwt = require("./app/middlewares/authJwt")
 
 app.use(cors({
-  origin: 'https://kanbantask.onrender.com'
+  origin: 'https://kanbantask.onrender.com/3000'
 }));
 
 // parse requests of content-type - application/json
