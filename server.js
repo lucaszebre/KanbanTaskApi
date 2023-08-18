@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser')
 const  dotenv = require('dotenv');
 const app = express();
 const mongoose = require('mongoose')
-const authJwt = require("./app/middlewares/authJwt")
+const {checkUser} = require("./app/middlewares/authJwt")
 
 app.use(cors({
   origin: 'http://localhost:3000'
@@ -36,8 +36,7 @@ db.mongoose
   });
 
   // app.get('*', authJwt.requireAuth);
-
-
+app.get('*', checkUser);
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Kanban Task APi by lucaszebre." });
