@@ -52,14 +52,10 @@ const boardSchema = new mongoose.Schema({
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
-    email: {type:String,
-    required:[true,'please enter a  email'],
+    userId: {type:String,
     unique:true,
-    validate:[isEmail,'Please enter a valid email']
   },
-    password: {type:String,
-    required:[true,'please enter a password'],
-    minilength:[6,'Minimun password length of 6 character']},
+    
     Boards:[boardSchema]
   })
 );

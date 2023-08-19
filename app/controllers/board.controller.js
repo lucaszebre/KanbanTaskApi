@@ -7,7 +7,7 @@ exports.getUserBoards = async (req, res) => {
     try {
       const { userId} = req.params;
       // Assuming you have a user ID available in req.user
-      const userBoards = await User.find({ _id: userId }); // Adjust the query to match your schema
+      const userBoards = await User.find({ userId: userId }); // Adjust the query to match your schema
         res.status(200).json(userBoards);
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
@@ -17,7 +17,7 @@ exports.getUserBoards = async (req, res) => {
     exports.getOneBoard = async (req,res) => {
       try{
       const {userId,boardId} = req.params;
-      const userBoards = await User.findById(userId ); // Adjust the query to match your schema
+      const userBoards = await User.find({ userId: userId } ); // Adjust the query to match your schema
       const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
 
       const board = userBoards.Boards[boardIndex];
@@ -35,7 +35,7 @@ exports.updateBoards = async (req, res) => {
         // You can use findByIdAndUpdate or findOneAndUpdate
         const newBoardData = req.body; // Assuming the request body contains the new board data
         const { boardId,userId} = req.params;
-        const userBoards = await User.findById(userId ); // Adjust the query to match your schema
+        const userBoards = await User.find({ userId: userId } ); // Adjust the query to match your schema
         const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
 
          userBoards.Boards[boardIndex] = newBoardData;
@@ -55,8 +55,8 @@ exports.updateBoards = async (req, res) => {
         const newBoardData = req.body; // Assuming the request body contains the new board data
         newBoardData.userId = req.user; // Set the user ID associated with the board
 
-        const user = await User.findByIdAndUpdate(
-          userId,
+        const user = await User.findOneAndUpdate(
+          {userId:userId},
           { $push: { Boards: newBoardData } }, // Add the new board to the user's Boards array
           { new: true } // Return the updated user
         );
