@@ -1,11 +1,12 @@
 const config = require("../config/auth.config");
 const db = require("../models");
 const User = db.user;
-const supabase = require('../../supabase.js')
+const supabase = require('../../supabase.js').supabase;
 
 exports.register = async (req, res) => {
   try {
-    const { user, error } = await supabase.auth.signUp({
+    const { user, error } = await supabase.auth.signUp({  //    "message": "Cannot read properties of undefined (reading 'signUp')"
+
       email: req.body.email,
       password: req.body.password,
     });
