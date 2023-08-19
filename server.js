@@ -6,10 +6,12 @@ const app = express();
 const mongoose = require('mongoose')
 const {checkUser} = require("./app/middlewares/authJwt")
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  allowedHeaders:true
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true, // Allow credentials (cookies) to be sent with requests
+  })
+);
 
 // parse requests of content-type - application/json
 app.use(express.json());
