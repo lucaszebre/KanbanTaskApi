@@ -7,7 +7,8 @@ const mongoose = require('mongoose')
 const {checkUser} = require("./app/middlewares/authJwt")
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000',
+  allowedHeaders:true
 }));
 
 // parse requests of content-type - application/json
