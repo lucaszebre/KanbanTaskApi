@@ -1,33 +1,36 @@
 const config = require("../config/auth.config");
 const db = require("../models");
 const User = db.user;
+const supabase = require('../../supabase.js')
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
-const maxAge = 3 * 24 * 60 * 60;
+exports.register = async (req, res) => {
+  try {
+    const { user, error } = await supabase.auth.signUp({
+      email: req.body.email,
+      password: req.body.password,
+    });
 
-exports.register = (req, res) => {
-
-  const user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
-  });
-
-  user.save((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
+    if (error) {
+      return res.status(500).send({ origine:'register', message: error.message });
     }
-          res.send({ message: "User was registered successfully!", user });
-        });
+    const NewUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+    });
+    await NewUser.save()
+    res.send({ message: 'User was registered successfully!', user });
+  } catch (error) {
+    res.status(500).send({ origine:'catch error register', message: error.message });
+  }
+
+  
   
       };
 
 
-exports.login = (req, res) => {
-  User.findOne({
-    username: req.body.username
+exports.login = async (req, res) => {
+const LogingUser=  User.findOne({
+    username: req.body.email
   })
     .exec((err, user) => {
       if (err) {
@@ -39,42 +42,36 @@ exports.login = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      var passwordIsValid = bcrypt.compareSync(
-        req.body.password,
-        user.password
-      );
-
-      if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
-      }
-
-      const token = jwt.sign(
-        { id: user.id },
-        config.secret,
-        {
-          algorithm: 'HS256',
-          expiresIn: '1000000000000000000', // 24 hours
-        }
-      );
-      res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-
-      res.status(200)
-      .header('Authorization', 'Bearer ' + token)
-      .send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        token:token
-      });
+    })
+  try {
+    const { user, session, error } = await supabase.auth.signIn({
+      email: req.body.email, // Use email or username as per Supabase requirements
+      password: req.body.password,
     });
+
+    if (error) {
+      return res.status(401).send({ message: 'Invalid login credentials' });
+    }
+
+
+    res.status(200).send({
+      id: LogingUser._id,
+      email: LogingUser.email,
+    });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+
+    if (error) {
+      return res.status(401).send({ message: 'Invalid login credentials' });
+    }
+
+  
 };
 
 
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', '', { maxAge: 1 });
+  supabase.auth.signOut();
   res.redirect('/');
-}
+};

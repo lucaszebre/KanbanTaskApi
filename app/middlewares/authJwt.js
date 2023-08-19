@@ -2,24 +2,24 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
+const {supabase} = require('../../supabase.js')
 
-const requireAuth = (req, res, next) => {
-  const token = req.cookies.jwt;
+const requireAuth = async (req, res, next) => {
+  const session = req.headers.authorization; // Get session token from headers
 
-  // check json web token exists & is verified
-  if (token) {
-    jwt.verify(token, config.secret, (err, decodedToken) => {
-      if (err) {
-        console.log(err.message);
-        res.redirect('/auth/login');
-      } else {
-        console.log(decodedToken);
-        next();
-      }
-    });
-  } else {
-    res.redirect('/auth/login');
+  if (!session) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+
+  // Verify the session with Supabase
+  const { user } = await supabase.auth.api.getUser(session);
+
+  if (!user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  req.user = user; // Attach the user to the request object
+  next();
 };
 
 // check current user

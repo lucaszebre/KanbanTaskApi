@@ -13,7 +13,7 @@ module.exports = function(app) {
   app.post(
     "/auth/register",
     [
-      verifyRegister.checkDuplicateUsernameOrEmail,
+      verifyRegister.checkDuplicateEmail,
     ],
     controller.register
   );

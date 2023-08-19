@@ -52,10 +52,6 @@ const boardSchema = new mongoose.Schema({
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
-    username: {
-    type:String,
-    required:[true,"please enter a username"],
-    unique:true},
     email: {type:String,
     required:[true,'please enter a  email'],
     unique:true,
