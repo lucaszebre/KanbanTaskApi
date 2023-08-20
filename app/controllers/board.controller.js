@@ -17,7 +17,7 @@ exports.getUserBoards = async (req, res) => {
     exports.getOneBoard = async (req,res) => {
       try{
       const {userId,boardId} = req.params;
-      const userBoards = await User.find({ userId: userId } ); // Adjust the query to match your schema
+      const userBoards = await User.findOne({ userId: userId } ); // Adjust the query to match your schema
       const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
 
       const board = userBoards.Boards[boardIndex];
@@ -71,9 +71,9 @@ exports.updateBoards = async (req, res) => {
         const { boardId, userId } = req.params;
     
         // Find the user by ID
-        const user = await User.findById(userId);
-    
-        // Find the index of the board to be deleted in the user's Boards array
+        const user = await User.findOne({ userId: userId });
+        if(user){
+          // Find the index of the board to be deleted in the user's Boards array
         const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
     
         if (boardIndex === -1) {
@@ -87,6 +87,9 @@ exports.updateBoards = async (req, res) => {
         await user.save();
     
         res.status(200).json({ message: 'Board deleted successfully', updatedUser: user });
+        }
+    
+        
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

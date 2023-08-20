@@ -4,7 +4,7 @@ const User = db.user;
 exports.getColumnTask = async (req, res) => {
     try {
       const { userId,boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
-      const user = await User.findById(userId); // Retrieve the board by its ID
+      const user = await User.findOne({ userId: userId }); // Retrieve the board by its ID
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -32,7 +32,7 @@ exports.getColumnTask = async (req, res) => {
       const newTask = req.body; // Assuming the request body contains the new task data
 
       const { userId,boardId, columnId } = req.params; // Extract boardId and columnName from request parameters
-      const user = await User.findById(userId); // Retrieve the board by its ID
+      const user = await User.findOne({ userId: userId }); // Retrieve the board by its ID
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
@@ -42,7 +42,6 @@ exports.getColumnTask = async (req, res) => {
 
       const column = user.Boards[boardIndex].columns[columnIndex].tasks.push(newTask);
       const Newcolumn = user.Boards[boardIndex].columns[columnIndex].tasks;
-      console.log('column',column);
   
       if (!column) {
         return res.status(404).json({ message: 'Column not found' });
