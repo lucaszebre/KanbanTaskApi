@@ -130,3 +130,10 @@ exports.getColumnTask = async (req, res) => {
 
 
   
+  exports.updateColumnTask = async (req, res) => {
+    try{
+      const { userId, boardId, columnId} = req.params;
+    }catch(error){
+
+    }
+  }
