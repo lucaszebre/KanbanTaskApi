@@ -117,3 +117,41 @@ exports.getUserBoards = async (req, res) => {
     };
 
     
+    exports.createColumns = async (req, res) => {
+      try {
+        const { boardId, userId } = req.params;
+        const { name } = req.body; // Assuming the request body contains the new column's name
+    
+        // Find the user by ID
+        const user = await User.findOne({ userId: userId });
+    
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+    
+        // Find the index of the board to be updated in the user's Boards array
+        const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+    
+        if (boardIndex === -1) {
+          return res.status(404).json({ message: 'Board not found' });
+        }
+    
+        // Create a new column object with the provided name and an empty tasks array
+        const newColumn = {
+          name: name,
+          tasks: []
+        };
+    
+        // Push the new column to the existing columns array of the board
+        user.Boards[boardIndex].columns.push(newColumn);
+    
+        // Save the updated user
+        await user.save();
+    
+        res.status(200).json({ message: 'Column created successfully', updatedUser: user });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    };
+    
