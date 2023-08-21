@@ -59,7 +59,7 @@ exports.getColumnTask = async (req, res) => {
       const { userId, boardId, columnId, taskId } = req.params; // Extract boardId, columnId, and taskId from request parameters
       const newTask = req.body; // Assuming the request body contains the new task data
     
-      const user = await User.findById(userId); // Retrieve the user by their ID
+      const user = await User.findOne({ userId: userId }); // Retrieve the user by their ID
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
