@@ -28,24 +28,44 @@ exports.getUserBoards = async (req, res) => {
       }
     }
   // Update boards
-exports.updateBoards = async (req, res) => {
+  exports.updateBoards = async (req, res) => {
     try {
-        // Assuming you have a user ID available in req.user
-        // Update logic here, e.g., req.body contains updated board data
-        // You can use findByIdAndUpdate or findOneAndUpdate
-        const newBoardData = req.body; // Assuming the request body contains the new board data
-        const { boardId,userId} = req.params;
-        const userBoards = await User.find({ userId: userId } ); // Adjust the query to match your schema
-        const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
-
-         userBoards.Boards[boardIndex] = newBoardData;
-
-        await userBoards.save()
-        res.status(200).json(userBoards);
-        } catch (error) {
-        res.status(500).json({ message: 'Internal server error' });
-        }
-    };
+      const { boardId, userId } = req.params;
+      const newBoardData = req.body; // Assuming the request body contains the new board data
+      const { name, columns } = newBoardData;
+  
+      const userBoards = await User.findOne({ userId: userId }); // Adjust the query to match your schema
+  
+      if (!userBoards) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
+  
+      if (boardIndex === -1) {
+        return res.status(404).json({ message: 'Board not found' });
+      }
+  
+      if (name) {
+        // If "name" property is present in the request body, update only the name
+        userBoards.Boards[boardIndex].name = name;
+      }
+  
+      if (columns) {
+        // If "columns" property is present in the request body, update columns
+        userBoards.Boards[boardIndex].columns = columns;
+      }
+  
+      await userBoards.save();
+  
+      res.status(200).json(userBoards);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+  
     
   // Create new board
     exports.createBoard = async (req, res) => {
@@ -93,5 +113,34 @@ exports.updateBoards = async (req, res) => {
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+      }
+    };
+
+    exports.changeName = async (req, res) => {
+      try {
+        const { boardId,userId } = req.params;
+        const { name } = req.body; // Assuming the request body contains the new board name
+        console.log("userId:", userId);
+    console.log("boardId:", boardId);
+    console.log("name:", name);
+        const userBoards = await User.findOne({ userId: userId }); // Assuming your User model has a field named userId
+    
+        if (!userBoards) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+    
+        const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
+    
+        if (boardIndex === -1) {
+          return res.status(404).json({ message: 'Board not found' });
+        }
+    
+        userBoards.Boards[boardIndex].name = name;
+    
+        await userBoards.save();
+        res.status(200).json(userBoards);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error });
       }
     };

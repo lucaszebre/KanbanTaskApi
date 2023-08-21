@@ -7,6 +7,6 @@ module.exports = function(app) {
     app.put('/user/:userId/boards/:boardId',controller.updateBoards);
     app.post('/user/:userId',controller.createBoard);
     app.delete('/user/:userId/boards/:boardId',controller.deleteBoard);
-  
-      
+    app.put('user/:userId/boards/:boardId/changename',controller.changeName);
+
 }
