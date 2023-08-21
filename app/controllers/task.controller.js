@@ -133,7 +133,29 @@ exports.getColumnTask = async (req, res) => {
   exports.updateColumnTask = async (req, res) => {
     try{
       const { userId, boardId, columnId} = req.params;
-    }catch(error){
+      const newBoardData = req.body; 
+      const { name } = newBoardData;
+      const user = await User.findOne({ userId: userId }); // Retrieve the board by its ID
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
 
+      const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+
+      const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
+
+      const column = user.Boards[boardIndex].columns[columnIndex];
+
+ // Find the specified column
+      if (!column) {
+        return res.status(404).json({ message: 'Column not found' });
+      }
+      user.Boards[boardIndex].columns[columnIndex].name=name
+
+      await user.save()
+      res.status(200).json(user.Boards[boardIndex].columns[columnIndex]);
+    }catch(error){
+      console.error(error);
+      res.status(500).json({ message:error });
     }
   }
