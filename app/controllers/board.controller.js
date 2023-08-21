@@ -154,4 +154,33 @@ exports.getUserBoards = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
       }
     };
+
+    exports.deleteColumns = async (req,res) => {
+      try {
+        const { userId, boardId, columnId } = req.params; // Extract boardId, columnId, and taskId from request parameters
+        const user = await User.findOne({ userId: userId }); // Retrieve the user by their ID
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
     
+        const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+        if (boardIndex === -1) {
+          return res.status(404).json({ message: 'Board not found' });
+        }
+    
+        const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
+        if (columnIndex === -1) {
+          return res.status(404).json({ message: 'Column not found' });
+        }
+    
+        
+    
+        // Update the task data with the newTask data
+        user.Boards[boardIndex].columns.splice(columnIndex,1);
+    
+        await user.save(); // Save the updated user
+        res.status(201).json({ message: 'Column deleted successfully' });
+      } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    }

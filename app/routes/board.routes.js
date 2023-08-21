@@ -8,5 +8,6 @@ module.exports = function(app) {
     app.post('/user/:userId',controller.createBoard);
     app.post('/user/:userId/boards/:boardId',controller.createColumns);
     app.delete('/user/:userId/boards/:boardId',controller.deleteBoard);
+    app.delete('/user/:userId/boards/:boardId/columns/:columnId',controller.deleteColumns);
 
 }
