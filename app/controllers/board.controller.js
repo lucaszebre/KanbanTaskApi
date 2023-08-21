@@ -116,31 +116,4 @@ exports.getUserBoards = async (req, res) => {
       }
     };
 
-    exports.changeName = async (req, res) => {
-      try {
-        const { boardId,userId } = req.params;
-        const { name } = req.body; // Assuming the request body contains the new board name
-        console.log("userId:", userId);
-    console.log("boardId:", boardId);
-    console.log("name:", name);
-        const userBoards = await User.findOne({ userId: userId }); // Assuming your User model has a field named userId
     
-        if (!userBoards) {
-          return res.status(404).json({ message: 'User not found' });
-        }
-    
-        const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
-    
-        if (boardIndex === -1) {
-          return res.status(404).json({ message: 'Board not found' });
-        }
-    
-        userBoards.Boards[boardIndex].name = name;
-    
-        await userBoards.save();
-        res.status(200).json(userBoards);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: error });
-      }
-    };
