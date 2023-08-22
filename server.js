@@ -47,6 +47,7 @@ app.get("/", (req, res) => {
 
 // routes
 require("./app/routes/auth.routes")(app);
+require("./app/routes/column.routes")(app);
 require("./app/routes/board.routes")(app);
 require("./app/routes/task.routes.js")(app);
 
