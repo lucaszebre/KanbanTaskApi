@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const {isEmail} = require('validator')
-
+const { isEmail } = require('validator');
 
 // Define subtask schema
 const subtaskSchema = new mongoose.Schema({
@@ -11,6 +10,18 @@ const subtaskSchema = new mongoose.Schema({
   isCompleted: {
     type: Boolean,
     default: false
+  },
+  taskId: { // Reference to the parent task ID
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
+  columnId: { // Reference to the parent column ID
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
+  boardId: { // Reference to the parent board ID
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   }
 });
 
@@ -29,7 +40,28 @@ const taskSchema = new mongoose.Schema({
     enum: ['Todo', 'In Progress', 'Done'],
     default: 'Todo'
   },
-  subtasks: [subtaskSchema]
+  subtasks: [subtaskSchema],
+  columnId: { // Reference to the parent column ID
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
+  boardId: { // Reference to the parent board ID
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  }
+});
+
+// Define column schema
+const columnSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  tasks: [taskSchema],
+  boardId: { // Reference to the parent board ID
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  }
 });
 
 // Define board schema
@@ -38,28 +70,19 @@ const boardSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  columns: [{
-  
-    name: {
-      type: String,
-      required: true
-    },
-    tasks: [taskSchema]
-  
-}]
+  columns: [columnSchema]
 });
 
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
-    userId: {type:String,
-    unique:true,
-  },
-    
-    Boards:[boardSchema]
+    userId: {
+      type: String,
+      unique: true
+    },
+    Boards: [boardSchema]
   })
 );
 
-// Create the Board model
-
 module.exports = User;
+

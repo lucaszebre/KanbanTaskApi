@@ -106,5 +106,48 @@ const User = db.user;
   };
 
 
+
+  exports.getTask = async (req, res) => {
+    try {
+      const { userId, boardId, columnId, taskId } = req.params;
+      const userBoards = await User.findOne({ userId: userId }); // Adjust the query to match your schema
   
- 
+      if (!userBoards) {
+        res.status(400).json({ message: 'No user found' });
+        return;
+      }
+  
+      const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
+  
+      if (boardIndex === -1) {
+        res.status(400).json({ message: 'No board found' });
+        return;
+      }
+  
+      const board = userBoards.Boards[boardIndex];
+  
+      const columnIndex = board.columns.findIndex(column => column._id.toString() === columnId);
+  
+      if (columnIndex === -1) {
+        res.status(400).json({ message: 'No column found' });
+        return;
+      }
+  
+      const column = board.columns[columnIndex];
+  
+      const taskIndex = column.tasks.findIndex(task => task._id.toString() === taskId);
+  
+      if (taskIndex === -1) {
+        res.status(400).json({ message: 'No task found' });
+        return;
+      }
+  
+      const task = column.tasks[taskIndex];
+  
+      res.status(200).json(task);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
