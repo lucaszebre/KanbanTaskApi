@@ -29,7 +29,7 @@ const User = db.user;
                     return res.status(404).json({ message: 'Task not found' });
                 }
                 
-                const subtaskIndex = user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].findIndex(subtask => subtask._id.toString() === subtaskId)
+                const subtaskIndex = user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks.findIndex(subtask => subtask._id.toString() === subtaskId)
                 if (subtaskIndex === -1) {
                     return res.status(404).json({ message: 'SubTask not found' });
                 }                
