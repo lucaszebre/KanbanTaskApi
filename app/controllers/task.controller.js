@@ -151,3 +151,44 @@ const User = db.user;
     }
   };
   
+
+  exports.changeColumns = async (req, res) => { 
+    try {
+      const { userId, boardId, columnId1,columnId2, taskId } = req.params; // Extract boardId, columnId, and taskId from request parameters
+      const user = await User.findOne({ userId: userId }); // Retrieve the user by their ID
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+      if (boardIndex === -1) {
+        return res.status(404).json({ message: 'Board not found' });
+      }
+  
+      const columnIndex1 = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId1);
+      const columnIndex2 = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId2);
+      if (columnIndex1 === -1) {
+        return res.status(404).json({ message: 'Column 1 not found' });
+      }
+      if (columnIndex2 === -1) {
+        return res.status(404).json({ message: 'Column 2 not found' });
+      }
+  
+      const taskIndex1 = user.Boards[boardIndex].columns[columnIndex1].tasks.findIndex(task => task._id.toString() === taskId);
+      if (taskIndex1 === -1) {
+        return res.status(404).json({ message: 'Task1 not found' });
+      }
+      
+      
+      const taskTemp = user.Boards[boardIndex].columns[columnIndex1].tasks[taskIndex1];
+      
+      // Update the task data with the newTask data
+      user.Boards[boardIndex].columns[columnIndex1].tasks.splice(taskIndex1,1);
+      user.Boards[boardIndex].columns[columnIndex2].tasks.push(taskTemp);
+      await user.save(); // Save the updated user
+      res.status(201).json({ message: 'Task change columns' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
