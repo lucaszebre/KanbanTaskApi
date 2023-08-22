@@ -7,7 +7,7 @@ const User = db.user;
     exports.ToggleSubTask = async (req, res) => {
         try {
                 const { userId, boardId, columnId, taskId,subtaskId } = req.params; // Extract boardId, columnId, and taskId from request parameters
-                const newTask = req.body; // Assuming the request body contains the new task data
+                const { isCompleted } = req.body;  // Assuming the request body contains the new task data
                 
                 const user = await User.findOne({ userId: userId }); // Retrieve the user by their ID
                 if (!user) {
@@ -34,7 +34,7 @@ const User = db.user;
                     return res.status(404).json({ message: 'SubTask not found' });
                 }                
                 
-                user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks[subtaskIndex].isCompleted = !user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks[subtaskIndex].isCompleted
+                user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks[subtaskIndex].isCompleted = isCompleted
             
                 await user.save(); // Save the updated user
             
