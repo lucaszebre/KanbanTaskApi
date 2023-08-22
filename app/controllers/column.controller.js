@@ -4,7 +4,7 @@ const User = db.user;
 exports.createColumns = async (req, res) => {
     try {
       const { boardId, userId } = req.params;
-      const { name } = req.body; // Assuming the request body contains the new column's name
+      const { name  } = req.body; // Assuming the request body contains the new column's name
   
       // Find the user by ID
       const user = await User.findOne({ userId: userId });
@@ -23,6 +23,7 @@ exports.createColumns = async (req, res) => {
       // Create a new column object with the provided name and an empty tasks array
       const newColumn = {
         name: name,
+        boardId:boardId,
         tasks: []
       };
   

@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
-const { isEmail } = require('validator');
+const {isEmail} = require('validator')
+const crypto = require("crypto")
+const uuid = crypto.randomUUID()
 
 // Define subtask schema
 const subtaskSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default:  () => crypto.randomUUID()
+    , // Generate a unique ID using nanoid
+  },
   title: {
     type: String,
     required: true
@@ -11,29 +18,26 @@ const subtaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  taskId: { // Reference to the parent task ID
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Task' // Reference to the Task model
-  },
-  columnId: { // Reference to the parent column ID
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Column' // Reference to the Column model
-  },
-  boardId: { // Reference to the parent board ID
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Board' // Reference to the Board model
-  }
+  columnId:{
+    type:String,},
+    boardId:{
+      type:String,
+    },
+    taskId:{
+      type:String,
+      required:false
+    }
 });
-
 
 // Define task schema
 const taskSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default:  () => crypto.randomUUID(), // Generate a unique ID using nanoid
+  },
   title: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,
@@ -45,51 +49,50 @@ const taskSchema = new mongoose.Schema({
     default: 'Todo'
   },
   subtasks: [subtaskSchema],
-  columnId: { // Reference to the parent column ID
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Column' // Reference to the Column model
-  },
-  boardId: { // Reference to the parent board ID
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Board' // Reference to the Board model
-  }
-});
-
-// Define column schema
-const columnSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  tasks: [taskSchema],
-  boardId: { // Reference to the parent board ID
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Board' // Reference to the Board model
-  }
+  columnId:{
+    type:String,
+    },
+    boardId:{
+      type:String,
+    }
 });
 
 // Define board schema
 const boardSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default:  () => crypto.randomUUID(), // Generate a unique ID using nanoid
+  },
   name: {
     type: String,
-    required: true
   },
-  columns: [columnSchema]
+  columns: [{
+    _id: {
+      type: String,
+      default:  () => crypto.randomUUID(), // Generate a unique ID using nanoid
+    },
+    name: {
+      type: String,
+    },
+    boardId:{
+      type:String,
+    },
+    tasks: [taskSchema]
+  
+}]
 });
 
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
-    userId: {
-      type: String,
-      unique: true
-    },
-    Boards: [boardSchema]
+    userId: {type:String,
+    unique:true,
+  },
+    
+    Boards:[boardSchema]
   })
 );
 
-module.exports = User;
+// Create the Board model
 
+module.exports = User;

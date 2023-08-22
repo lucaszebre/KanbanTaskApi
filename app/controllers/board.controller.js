@@ -1,7 +1,6 @@
 const db = require("../models");
 const User = db.user;
 const Board = db.user;
-
 // Get user's boards
 exports.getUserBoards = async (req, res) => {
     try {

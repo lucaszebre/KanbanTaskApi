@@ -17,7 +17,7 @@ const User = db.user;
 
       const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
 
-      const column = user.Boards[boardIndex].columns[columnIndex].tasks.push(newTask);
+      const column = user.Boards[boardIndex].columns[columnIndex].tasks.push({...newTask,userId,boardId,columnId});
       const Newcolumn = user.Boards[boardIndex].columns[columnIndex].tasks;
   
       if (!column) {
