@@ -13,23 +13,27 @@ const subtaskSchema = new mongoose.Schema({
   },
   taskId: { // Reference to the parent task ID
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Task' // Reference to the Task model
   },
   columnId: { // Reference to the parent column ID
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Column' // Reference to the Column model
   },
   boardId: { // Reference to the parent board ID
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Board' // Reference to the Board model
   }
 });
+
 
 // Define task schema
 const taskSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: false
+    required: true
   },
   description: {
     type: String,
@@ -43,11 +47,13 @@ const taskSchema = new mongoose.Schema({
   subtasks: [subtaskSchema],
   columnId: { // Reference to the parent column ID
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Column' // Reference to the Column model
   },
   boardId: { // Reference to the parent board ID
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Board' // Reference to the Board model
   }
 });
 
@@ -60,7 +66,8 @@ const columnSchema = new mongoose.Schema({
   tasks: [taskSchema],
   boardId: { // Reference to the parent board ID
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'Board' // Reference to the Board model
   }
 });
 
