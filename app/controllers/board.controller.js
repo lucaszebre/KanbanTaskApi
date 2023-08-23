@@ -20,7 +20,6 @@ exports.getUserBoards = async (req, res) => {
       const boardIndex = userBoards.Boards.findIndex(board => board._id.toString() === boardId);
 
       const board = userBoards.Boards[boardIndex];
-      console.log('board',board)
       res.status(200).json(board);
       }catch(error){
         res.status(500).json({message:'Internal server error'})

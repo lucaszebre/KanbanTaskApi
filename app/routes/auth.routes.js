@@ -10,15 +10,8 @@ module.exports = function(app) {
     next();
   });
 
-  // app.post(
-  //   "/auth/register",
-  //   [
-  //     verifyRegister.checkDuplicateEmail,
-  //   ],
-  //   controller.register
-  // );
+  
 
   app.post("/auth/init", controller.initiate);
-  // app.post('/auth/logout',controller.logout);
 
 };
