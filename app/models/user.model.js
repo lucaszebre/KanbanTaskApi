@@ -7,12 +7,12 @@ const uuid = crypto.randomUUID()
 const subtaskSchema = new mongoose.Schema({
   _id: {
     type: String,
-    default:  () => crypto.randomUUID()
-    , // Generate a unique ID using nanoid
+    default:  () => crypto.randomUUID(),
+     // Generate a unique ID using nanoid
   },
   title: {
     type: String,
-    required: true
+    required: false
   },
   isCompleted: {
     type: Boolean,
