@@ -46,28 +46,27 @@ const User = db.user;
     };
     
   // Create a new task within a column
-exports.createSubTask = async (req, res) => {
-    try {
-      const newSubtask = req.body; // Assuming the request body contains the new task data
+    exports.createSubTask = async (req, res) => {
+        try {
+        const newSubtask = req.body; // Assuming the request body contains the new task data
 
-      const { userId,boardId, columnId,taskId } = req.params; // Extract boardId and columnName from request parameters
-      const user = await User.findOne({ userId: userId }); // Retrieve the board by its ID
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-      const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
+        const { userId,boardId, columnId,taskId } = req.params; // Extract boardId and columnName from request parameters
+        const user = await User.findOne({ userId: userId }); // Retrieve the board by its ID
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const boardIndex = user.Boards.findIndex(board => board._id.toString() === boardId);
 
-      const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
-      const taskIndex = user.Boards[boardIndex].columns[columnIndex].tasks.findIndex(task => task._id.toString() === taskId);
+        const columnIndex = user.Boards[boardIndex].columns.findIndex(column => column._id.toString() === columnId);
+        const taskIndex = user.Boards[boardIndex].columns[columnIndex].tasks.findIndex(task => task._id.toString() === taskId);
 
-      // Push the new subtask to the tasks array
-    user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks.push(newSubtask);
-  
+        // Push the new subtask to the tasks array
+        user.Boards[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks.push(newSubtask);
     
-     await user.save();
-      res.status(201).json(newSubtask);
-    } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-  
+        
+        await user.save();
+        res.status(201).json(newSubtask);
+        } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+        }
+    };
